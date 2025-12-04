@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NoteNest — High‑Quality Study Notes</title>
+    <meta
+      name="description"
+      content="NoteNest — Download high-quality, exam-ready notes. Pay ₹19 per note via UPI to unlock the PDF."
+    />
+    <style>
+      :root {
+        /* 4. Use Yellow and White Shades */
+        --accent: #ffc107; /* Warm Yellow */
+        --accent-dark: #ff9800; /* Darker Yellow */
+        --muted: #6b7280;
+        --bg: #fffbf5; /* Off-White/Light Cream */
+        --card: #ffffff;
+        --radius: 14px;
+        --max-width: 980px;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        color-scheme: light;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: #0f172a;
+        line-height: 1.45;
+      }
+
+      /* Updated header for new colors */
+      header {
+        background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+        color: #333;
+        padding: 30px 16px;
+        text-align: center;
+        border-bottom: 3px solid #f1c40f;
+      }
+      header h1 {
+        margin: 0;
+        font-size: clamp(24px, 4vw, 36px);
+        letter-spacing: -0.4px;
+        color: #333;
+      }
+      header p {
+        margin: 8px 0 0;
+        color: #555;
+      }
+
+      .wrap {
+        max-width: var(--max-width);
+        margin: 24px auto;
+        padding: 16px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+        gap: 20px;
+      }
+      @media (max-width: 880px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .card {
+        background: var(--card);
+        border-radius: var(--radius);
+        padding: 18px;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+      }
+
+      .hero h2 {
+        margin: 0 0 8px;
+        font-size: 24px;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* 1. Scrollable 15-Page Preview */
+      .preview-container {
+        margin-top: 12px;
+        max-height: 300px; /* Set a fixed height for scroll */
+        max-width: 500px;
+        overflow-y: scroll;
+        border: 1px solid #ffedb3; /* Light yellow border */
+        border-radius: 10px;
+        padding: 8px;
+        background-color: #fcfcfc;
+      }
+
+      /* vertical single-column preview */
+      .preview-container {
+        margin-top: 12px;
+        max-height: 450px; /* Increased height for better view */
+        max-width: 100%;
+        overflow: auto; /* Changed to auto to allow zoom scrolling */
+        border: 1px solid #ffedb3; /* Light yellow border */
+        border-radius: 10px;
+        padding: 8px;
+        background-color: #fcfcfc;
+      }
+      /* --- START OF CHANGE (CSS for Zoom) --- */
+      .preview-grid {
+        display: block;
+        transform: scale(1); /* Initial zoom level */
+        transform-origin: top center; /* Scale from the top center */
+        transition: transform 0.2s ease; /* Smooth zoom transition */
+      }
+
+      .preview-grid img {
+        width: 80%; /* Adjusted width to fit preview container better on initial load */
+        height: auto;
+        display: block;
+        margin: 0 auto 10px auto;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+
+      .zoom-controls {
+        text-align: center;
+        margin-top: 10px;
+      }
+      .zoom-controls button {
+        background: #fef5e6;
+        color: var(--accent-dark);
+        border: 1px solid var(--accent);
+        padding: 8px 15px;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 0 5px;
+        transition: background 0.2s;
+      }
+      .zoom-controls button:hover {
+        background: #ffeac4;
+      }
+      /* --- END OF CHANGE (CSS for Zoom) --- */
+
+      .price-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 18px;
+      }
+      .price {
+        font-weight: 700;
+        font-size: 24px;
+        color: var(--accent-dark);
+      }
+
+      /* QR box */
+      .qr-box {
+        text-align: center;
+      }
+      .qr-box img {
+        width: 220px;
+        height: 220px;
+        border-radius: 12px;
+        border: 6px solid rgba(255, 193, 7, 0.3);
+        box-shadow: 0 0 0 2px var(--accent);
+      }
+      .qr-caption {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      /* CTA */
+      .btn {
+        display: inline-block;
+        padding: 12px 18px;
+        border-radius: 10px;
+        background: var(--accent);
+        color: #333;
+        text-decoration: none;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background: var(--accent-dark);
+      }
+      .btn.secondary {
+        background: #fef5e6;
+        color: var(--accent-dark);
+        border: 1px solid var(--accent);
+        box-shadow: none;
+      }
+      .btn.secondary:hover {
+        background: #ffeac4;
+      }
+
+      .faq {
+        margin-top: 18px;
+      }
+      .faq h4 {
+        margin: 10px 0 6px;
+      }
+
+      footer {
+        max-width: var(--max-width);
+        margin: 28px auto;
+        padding: 12px;
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      /* success box */
+      .success {
+        padding: 14px;
+        border-radius: 10px;
+        background: #fffde7;
+        border: 1px solid #ffecb3;
+        color: #795548;
+        margin-top: 12px;
+      }
+
+      /* small helpers */
+      .small {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .center {
+        text-align: center;
+      }
+
+      /* Removed modal styles as payment confirmation is now direct */
+      .modal-backdrop {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>NesoNotes 📚</h1>
+      <p>
+        NoteNest: Your Secret Weapon for Exams! 🚀 High-Quality, Verified Study
+        Notes. Get them instantly via UPI for just ₹19! No waiting, no hassles.
+      </p>
+    </header>
+
+    <main class="wrap">
+      <div class="grid">
+        <section class="card">
+          <div class="hero">
+            <h2>Crisp, Printable Notes Built for Quick Revision</h2>
+            <p class="muted">
+              Stop wasting time! You'll get short summaries, clear diagrams,
+              formula sheets, and solved examples—all perfectly organized
+              chapter-by-chapter.
+            </p>
+            <p class="muted" style="font-weight: 600">
+              PDF Size: 74MB | Total Pages: 186
+            </p>
+
+            <div class="price-row">
+              <div>
+                <div class="small">Price</div>
+                <div class="price">₹19</div>
+              </div>
+              <div class="center">
+                <a class="btn" id="openPaymentBtn" href="#payment-card"
+                  >Unlock PDF Now (Just ₹19)</a
+                >
+              </div>
+            </div>
+
+            <h3 style="margin-top: 18px; margin-bottom: 8px">
+              See Before You Buy! (15-Page Preview)
+            </h3>
+            <div class="preview-container">
+              <div class="preview-grid">
+                <img src="images/page-0001.jpg" alt="Preview page 1" />
+                <img src="images/page-0002.jpg" alt="Preview page 2" />
+                <img src="images/page-0003.jpg" alt="Preview page 3" />
+                <img src="images/page-0004.jpg" alt="Preview page 4" />
+                <img src="images/page-0005.jpg" alt="Preview page 5" />
+                <img src="images/page-0006.jpg" alt="Preview page 6" />
+                <img src="images/page-0007.jpg" alt="Preview page 7" />
+                <img src="images/page-0008.jpg" alt="Preview page 8" />
+                <img src="images/page-0009.jpg" alt="Preview page 9" />
+                <img src="images/page-0010.jpg" alt="Preview page 10" />
+                <img src="images/page-0011.jpg" alt="Preview page 11" />
+                <img src="images/page-0012.jpg" alt="Preview page 12" />
+                <img src="images/page-0013.jpg" alt="Preview page 13" />
+                <img src="images/page-0014.jpg" alt="Preview page 14" />
+                <img src="images/page-0015.jpg" alt="Preview page 15" />
+              </div>
+            </div>
+
+            <div class="faq">
+              <h4>How to Get Your Notes (It's Super Fast!)</h4>
+              <ol class="small">
+                <li>
+                  Scan the UPI QR code on the right and pay ₹19 (It's a one-time
+                  payment).
+                </li>
+                <li>
+                  Tap "I Have Paid". Your link appears instantly .
+                  <span style="color: #ff9800"
+                    >(Our server confirms your payment automatically)</span
+                  >
+                </li>
+                <li>Download your PDF and start studying right away! 📚</li>
+              </ol>
+
+              <h4>Why Choose NesoNotes?</h4>
+              <p class="small">
+                We're built by students, for students! Expect focused layouts,
+                easy-to-print PDFs, and quick access to only the concepts that
+                actually matter for your exams.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <aside
+          class="card qr-box"
+          id="payment-card"
+          aria-label="Payment section"
+        >
+          <h3 style="margin-top: 0">Pay Easily via UPI (₹19)</h3>
+          <p class="muted">
+            Use PhonePe, Google Pay, Paytm, BHIM, or any UPI app to scan.
+          </p>
+
+          <!-- <img id="upiQr" src="images/qr.png" alt="NoteNest UPI QR Code" /> -->
+
+          <!-- Desktop fallback elements required by the script -->
+          <canvas
+            id="qrCanvas"
+            style="display: none; margin-top: 10px"
+          ></canvas>
+          <div id="linkFallback" style="margin-top: 8px"></div>
+
+          <div class="qr-caption">UPI ID: yourupi@bank</div>
+
+          <div style="margin-top: 18px">
+            <button class="btn" id="pay19">Pay ₹19</button>
+
+            <div style="height: 12px"></div>
+            <a
+              class="btn secondary"
+              href="#contact"
+              style="display: inline-block"
+              >Help / Contact</a
+            >
+          </div>
+
+          <div class="small" style="margin-top: 16px; font-weight: 600">
+            Guaranteed: Secure Payment • Instant Download • Best Value for Your
+            ₹19
+          </div>
+        </aside>
+      </div>
+
+      <div
+        class="card"
+        id="downloadCard"
+        style="display: none; margin-top: 20px; text-align: center"
+      >
+        <h3>🎉 Download Ready! Get Your Notes Now</h3>
+        <p class="small" style="font-size: 15px; color: #333">
+          Your payment is confirmed. Success! Your exam-ready notes are
+          waiting.Tap the button below to get your PDF instantly.
+        </p>
+        <div style="margin: 15px 0">
+          <a
+            id="downloadLink"
+            class="btn"
+            href="#"
+            style="padding: 15px 30px; font-size: 18px"
+            >Download PDF Now</a
+          >
+        </div>
+        <div class="success">
+          Having Trouble? We've Got You Covered. Worry-free delivery: Your
+          direct download link was also sent instantly to the email address or
+          phone number linked to your UPI payment. Check there if you need a
+          backup!
+        </div>
+      </div>
+
+      <section id="contact" class="card" style="margin-top: 20px">
+        <h3>Need Help?</h3>
+        <p class="muted">
+          We've Got Your Back! If your payment fails or you need support, reach
+          out anytime.
+        </p>
+        <p>
+          <br />
+          <strong>Email:</strong> help@notenest.example
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      © <span id="year"></span> NoteNest — Made for students • All rights
+      reserved
+    </footer>
+
+    <!-- Razorpay Checkout script (required) -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+      /*
+  REPLACE THESE TWO VALUES
+  1) BACKEND_BASE_URL  -> your deployed backend on Render (no trailing slash)
+     e.g. "https://upi-5.onrender.com"
+  2) RAZORPAY_KEY_ID   -> your Razorpay Key ID (public)
+*/
+      const BACKEND_BASE_URL = "https://upi-5.onrender.com"; // <- replace this
+      const RAZORPAY_KEY_ID = "rzp_test_Rnd4xVyNJxSZg4"; // <- replace this
+
+      // Payment config (already in your page)
+      const payeeName = "NoteNest";
+      const amountRs = 19; // rupees (number)
+      const tnxNote = "Order:19";
+
+      // DOM refs
+      const payBtn = document.getElementById("pay19");
+      const downloadCard = document.getElementById("downloadCard");
+      const downloadLink = document.getElementById("downloadLink");
+      const openPaymentBtn = document.getElementById("openPaymentBtn");
+
+      // Utility to show download UI
+      function showDownload(pdfUrl) {
+        downloadLink.href = pdfUrl;
+        downloadLink.setAttribute("target", "_blank");
+        downloadCard.style.display = "block";
+        // optionally scroll to it
+        downloadCard.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+
+      // Create order on your backend
+      async function createOrderOnServer(amountInRupees) {
+        const url = `${BACKEND_BASE_URL}/api/razorpay/create-order`;
+        const body = { amount: Number(amountInRupees) }; // backend expects number in rupees
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error(`Create-order failed: ${res.status} ${t}`);
+        }
+        const data = await res.json();
+        if (!data || !data.order)
+          throw new Error("Invalid create-order response");
+        return data.order;
+      }
+
+      // Verify payment on server and obtain pdfUrl
+      async function verifyPaymentOnServer(payload) {
+        const url = `${BACKEND_BASE_URL}/api/razorpay/verify`;
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(
+            data && data.error ? data.error : "Verification failed"
+          );
+        }
+        return data; // expects { success: true, pdfUrl }
+      }
+
+      async function startRazorpayFlow() {
+        try {
+          payBtn.disabled = true;
+          payBtn.textContent = "Processing...";
+
+          // 1) Create order on server
+          const order = await createOrderOnServer(amountRs);
+          // order should contain id, amount (in paise), currency etc.
+          // console.log('order', order);
+
+          // 2) Prepare Razorpay options
+          const options = {
+            key: RAZORPAY_KEY_ID,
+            amount: order.amount, // in paise
+            currency: order.currency || "INR",
+            name: payeeName,
+            description: `NoteNest ₹${amountRs}`,
+            order_id: order.id,
+            handler: async function (response) {
+              // response contains: razorpay_payment_id, razorpay_order_id, razorpay_signature
+              try {
+                payBtn.textContent = "Verifying...";
+                const payload = {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                };
+                const verifyResult = await verifyPaymentOnServer(payload);
+                if (verifyResult && verifyResult.success) {
+                  const pdfUrl =
+                    verifyResult.pdfUrl ||
+                    verifyResult.pdfURL ||
+                    verifyResult.pdf ||
+                    "";
+                  if (pdfUrl) {
+                    showDownload(pdfUrl);
+                  } else {
+                    alert(
+                      "Payment verified but no download URL returned from server."
+                    );
+                  }
+                } else {
+                  alert("Payment verification failed on server.");
+                  console.error("verifyResult", verifyResult);
+                }
+              } catch (err) {
+                console.error("Verification error:", err);
+                alert("Verification error: " + err.message);
+              } finally {
+                payBtn.disabled = false;
+                payBtn.textContent = `Pay ₹${amountRs}`;
+              }
+            },
+            modal: {
+              // optional: make checkout non-dismissible to reduce accidental closes
+              escape: true,
+              ondismiss: function () {
+                payBtn.disabled = false;
+                payBtn.textContent = `Pay ₹${amountRs}`;
+              },
+            },
+            prefill: {
+              name: "", // optionally fill buyer name/email if you have it
+            },
+            notes: {
+              product: "NoteNest PDF",
+            },
+            theme: {
+              color: "#ff9800",
+            },
+          };
+
+          // 3) Open Razorpay Checkout
+          const rzp = new Razorpay(options);
+          rzp.on("payment.failed", function (response) {
+            console.error("Payment Failed:", response.error);
+            alert(
+              "Payment failed: " +
+                (response.error.description || "Check console for details")
+            );
+            payBtn.disabled = false;
+            payBtn.textContent = `Pay ₹${amountRs}`;
+          });
+          rzp.open();
+        } catch (err) {
+          console.error("Checkout error:", err);
+          alert("Could not start payment: " + err.message);
+          payBtn.disabled = false;
+          payBtn.textContent = `Pay ₹${amountRs}`;
+        }
+      }
+
+      // Wire up button
+      if (payBtn) {
+        payBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          startRazorpayFlow();
+        });
+      }
+
+      // Optional: if you want the header "Unlock PDF Now" link to trigger payment too
+      if (openPaymentBtn) {
+        openPaymentBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          startRazorpayFlow();
+          // navigate to payment card for UX
+          document
+            .getElementById("payment-card")
+            .scrollIntoView({ behavior: "smooth" });
+        });
+      }
+    </script>
+  </body>
+</html>
